@@ -1,0 +1,15 @@
+[package]
+name = "cf-services"
+version = "0.1.0"
+edition = "2021"
+authors = ["Piszmog"]
+license = "MIT"
+repository = "https://github.com/Piszmog/cf-services.git"
+homepage = "https://github.com/Piszmog/cf-services"
+readme = "README.md"
+documentation = "https://github.com/Piszmog/cf-services"
+description = "Client library for Spring Config Server."
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
