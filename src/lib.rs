@@ -8,17 +8,18 @@
 //! The `cf-services` crate provides an easy way to retrieve information about services bounded to
 //! an application in Cloud Foundry.
 //!
-//! It retrieves and parses the `VCAP_SERVICES` environment variable into a struct for easier
-//! consumption.
+//! It retrieves and parses the `cf_services::VCAP_SERVICES` environment variable into a struct
+//! for easier consumption.
 //!
 //! ## Retrieving Services
 //!
-//! To retrieve all the services, simply use `get_services_from_env()`.
+//! To retrieve all the services, simply use `cf_services::get_services_from_env`.
 //!
 //! ## Service Credential
 //!
-//! To retrieve a service's credential information, either use `get_service_cred_from_env` or the
-//! convenience function `get_service_credentials`.
+//! To retrieve a service's credential information, either use
+//! `cf_services::get_service_cred_from_env` or the convenience function
+//! `cf_services::get_service_credentials`.
 
 use std::{env, fmt};
 use std::collections::HashMap;
@@ -33,47 +34,64 @@ pub const VCAP_SERVICES: &str = "VCAP_SERVICES";
 /// the same type can be bounded to an application (e.g. multiple Config Servers).
 #[derive(Deserialize, Debug)]
 pub struct Service {
+    /// The name of the service.
     #[serde(default)]
-    name: String,
+    pub name: String,
+    /// The instance name of the service.
     #[serde(default)]
-    instance_name: String,
+    pub instance_name: String,
+    /// The name the service is bounded as.
     #[serde(default)]
-    binding_name: String,
-    credentials: Credentials,
+    pub binding_name: String,
+    /// The credentials of the service.
+    pub credentials: Credentials,
+    /// The label associated with the service.
     #[serde(default)]
-    label: String,
+    pub label: String,
 }
 
 /// The credentials information for authenticating with the service.
 #[derive(Deserialize, Debug, Clone)]
 pub struct Credentials {
+    /// The URI of the service.
     #[serde(default)]
-    uri: String,
+    pub uri: String,
+    /// The JDBC URI of the service.
     #[serde(rename(deserialize = "jdbcUrl"))]
     #[serde(default)]
-    jdbc_url: String,
+    pub jdbc_url: String,
+    /// The API URI of the service.
     #[serde(rename(deserialize = "http_api_uri"))]
     #[serde(default)]
-    api_uri: String,
+    pub api_uri: String,
+    /// Th license key for the service.
     #[serde(rename(deserialize = "licenseKey"))]
     #[serde(default)]
-    license_key: String,
+    pub license_key: String,
+    /// The Client Secret for generating a token via OAuth.
     #[serde(default)]
-    client_secret: String,
+    pub client_secret: String,
     #[serde(default)]
-    client_id: String,
+    /// The Client ID for generating a token via OAuth.
+    pub client_id: String,
     #[serde(default)]
-    access_token_uri: String,
+    /// The Access Token URI for generating a token via OAuth.
+    pub access_token_uri: String,
+    /// The hostname of the service.
     #[serde(default)]
-    hostname: String,
+    pub hostname: String,
+    /// The username to authenticate with the service.
     #[serde(default)]
-    username: String,
+    pub username: String,
+    /// The password of the username.
     #[serde(default)]
-    password: String,
+    pub password: String,
+    /// The Port of the service.
     #[serde(default)]
-    port: i16,
+    pub port: i16,
+    /// The name of the credentials.
     #[serde(default)]
-    name: String,
+    pub name: String,
 }
 
 /// Retrieves the credential information of the specified service.
