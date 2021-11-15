@@ -1,6 +1,7 @@
 # CF Services
 
 [![crates.io](https://img.shields.io/crates/v/cf-services.svg)](https://crates.io/crates/cf-services)
+[![Rust](https://github.com/Piszmog/cf-services/actions/workflows/rust.yml/badge.svg)](https://github.com/Piszmog/cf-services/actions/workflows/rust.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 This library is aimed at removing the boilerplate code and let developers just worry about using actually connecting to
