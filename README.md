@@ -32,11 +32,11 @@ use cf_services::{get_services_from_env, get_service_credentials, get_service_cr
 
 fn main() {
     let services = get_services_from_env().unwrap();
-	let creds = get_service_credentials(services, "serviceB").unwrap();
-	// Use credentials...
-	
-	// Retrieve the JSON from the environment
-	let creds = get_service_cred_from_env("serviceB").unwrap();
-	// Use credentials...
+    let creds = get_service_credentials(services, "serviceB").unwrap();
+    // Use credentials...
+
+    // Retrieve the JSON from the environment
+    let creds = get_service_cred_from_env("serviceB").unwrap();
+    // Use credentials...
 }
 ```
