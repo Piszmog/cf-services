@@ -3,14 +3,34 @@
 #![cfg_attr(test, deny(warnings))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
+//! # cf-services
+//!
+//! The `cf-services` crate provides an easy way to retrieve information about services bounded to
+//! an application in Cloud Foundry.
+//!
+//! It retrieves and parses the `VCAP_SERVICES` environment variable into a struct for easier
+//! consumption.
+//!
+//! ## Retrieving Services
+//!
+//! To retrieve all the services, simply use `get_services_from_env()`.
+//!
+//! ## Service Credential
+//!
+//! To retrieve a service's credential information, either use `get_service_cred_from_env` or the
+//! convenience function `get_service_credentials`.
+
 use std::{env, fmt};
 use std::collections::HashMap;
 use std::fmt::Formatter;
 
 use serde::Deserialize;
 
-pub static VCAP_SERVICES: &str = "VCAP_SERVICES";
+/// The environment variable key that contains all the bounded services to the application.
+pub const VCAP_SERVICES: &str = "VCAP_SERVICES";
 
+/// The high level service information for a service bounded to an application. Multiple services of
+/// the same type can be bounded to an application (e.g. multiple Config Servers).
 #[derive(Deserialize, Debug)]
 pub struct Service {
     #[serde(default)]
@@ -24,6 +44,7 @@ pub struct Service {
     label: String,
 }
 
+/// The credentials information for authenticating with the service.
 #[derive(Deserialize, Debug, Clone)]
 pub struct Credentials {
     #[serde(default)]
@@ -55,17 +76,21 @@ pub struct Credentials {
     name: String,
 }
 
+/// Retrieves the credential information of the specified service.
 pub fn get_service_cred_from_env(service_name: String) -> Result<Vec<Credentials>, CFError> {
     get_services_from_env()
         .and_then(|services| get_service_credentials(services, service_name))
 }
 
+/// Retrieves all service information.
 pub fn get_services_from_env() -> Result<HashMap<String, Vec<Service>>, CFError> {
     env::var(VCAP_SERVICES)
         .map_err(|_| CFError::EnvNotSet)
         .and_then(|val| serde_json::from_str(&val).map_err(|_| CFError::MalformedJSON))
 }
 
+/// Retrieves the credential information from the provided services that match the specified service
+/// name.
 pub fn get_service_credentials(services: HashMap<String, Vec<Service>>, service_name: String) -> Result<Vec<Credentials>, CFError> {
     match services.get(&service_name) {
         Some(services) => Ok(services.iter().map(|service| service.credentials.clone()).collect()),
@@ -73,10 +98,14 @@ pub fn get_service_credentials(services: HashMap<String, Vec<Service>>, service_
     }
 }
 
+/// Enumeration of the different errors that can occur.
 #[derive(PartialEq, Debug)]
 pub enum CFError {
+    /// Error when the environment variable is not set.
     EnvNotSet,
+    /// Error then the environment variable JSON is malformed.
     MalformedJSON,
+    /// Error when a service is not present.
     ServiceNotPresent(String),
 }
 
@@ -145,6 +174,7 @@ mod tests {
 
     #[test]
     fn test_get_services_from_env_not_set() {
+        env::remove_var(VCAP_SERVICES);
         let err = get_services_from_env().err().unwrap();
         assert_eq!(CFError::EnvNotSet, err);
     }
