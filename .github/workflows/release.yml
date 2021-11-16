@@ -36,7 +36,7 @@ jobs:
           args: --release --all-features
       - name: Crates Login
         run: cargo login ${{ secrets.CRATES_TOKEN }}
-      - name: Release build
+      - name: Release Publish
         uses: actions-rs/cargo@v1
         with:
           command: publish
